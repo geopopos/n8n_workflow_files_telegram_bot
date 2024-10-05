@@ -26,7 +26,7 @@
           "parameters": [
             {
               "name": "Api-Key",
-              "value": "fzJI_BitQM_Yn6uLw9rCHd46Tciw73bBhOzNZw5KvM4T6pful0W0dN4c0yYF2DuhEyFw2pAVhUaI1C-ZPFwqtg"
+              "value": "YOUR-API-KEY"
             },
             {
               "name": "Content-Type",

@@ -29,7 +29,7 @@
     },
     {
       "parameters": {
-        "url": "https://api.telegram.org/bot7337252539:AAFdHG7YJmTZt3o7cxyYCEXytGeF3r5kSJY/getFile",
+        "url": "https://api.telegram.org/BOT_ID:TELEGRAM_ACCESS_TOKEN/getFile",
         "sendQuery": true,
         "queryParameters": {
           "parameters": [
@@ -52,7 +52,7 @@
     },
     {
       "parameters": {
-        "url": "=https://api.telegram.org/file/bot7337252539:AAFdHG7YJmTZt3o7cxyYCEXytGeF3r5kSJY/{{ $json.result.file_path }}",
+        "url": "=https://api.telegram.org/file/BOT_ID:TELEGRAM_ACCESS_TOKEN/{{ $json.result.file_path }}",
         "options": {}
       },
       "id": "5e5bb57b-23c0-4f9b-8abd-40d252424965",
