@@ -1,0 +1,429 @@
+{
+  "name": "Generate Posts",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "afbf7ab0-d786-463e-b3d2-aba6120cf529",
+        "options": {}
+      },
+      "id": "9e41b77b-fa86-4ade-9150-73616946aa45",
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1.1,
+      "position": [
+        680,
+        400
+      ],
+      "webhookId": "afbf7ab0-d786-463e-b3d2-aba6120cf529"
+    },
+    {
+      "parameters": {
+        "model": "gpt-4-turbo-preview",
+        "options": {
+          "frequencyPenalty": 0.4,
+          "presencePenalty": 0.6,
+          "temperature": 0.7,
+          "topP": 0.9
+        }
+      },
+      "id": "4020b51a-750a-4237-a720-2bac03002fd2",
+      "name": "OpenAI Chat Model",
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1,
+      "position": [
+        1120,
+        620
+      ],
+      "credentials": {
+        "openAiApi": {
+          "id": "4YCNNpwqNB3KDji8",
+          "name": "Roofing Copilot N8N Project"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "base": {
+          "__rl": true,
+          "value": "appXqGusAG2M1Otbf",
+          "mode": "list",
+          "cachedResultName": "Content Ideas",
+          "cachedResultUrl": "https://airtable.com/appXqGusAG2M1Otbf"
+        },
+        "table": {
+          "__rl": true,
+          "value": "tblM5x3rh2Q4lW8G9",
+          "mode": "list",
+          "cachedResultName": "Content Ideas",
+          "cachedResultUrl": "https://airtable.com/appXqGusAG2M1Otbf/tblM5x3rh2Q4lW8G9"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "id": "={{ $('Webhook').item.json.body.recordId }}",
+            "Post Body": "={{ $json.output }}"
+          },
+          "matchingColumns": [
+            "id"
+          ],
+          "schema": [
+            {
+              "id": "id",
+              "displayName": "id",
+              "required": false,
+              "defaultMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": true,
+              "removed": false
+            },
+            {
+              "id": "Name",
+              "displayName": "Name",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Assignee",
+              "displayName": "Assignee",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Status",
+              "displayName": "Status",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "options",
+              "options": [
+                {
+                  "name": "Todo",
+                  "value": "Todo"
+                },
+                {
+                  "name": "In progress",
+                  "value": "In progress"
+                },
+                {
+                  "name": "Done",
+                  "value": "Done"
+                }
+              ],
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Created At",
+              "displayName": "Created At",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "dateTime",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Transcript",
+              "displayName": "Transcript",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Outline",
+              "displayName": "Outline",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Post Type",
+              "displayName": "Post Type",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "array",
+              "options": [
+                {
+                  "name": "YouTube Shorts",
+                  "value": "YouTube Shorts"
+                },
+                {
+                  "name": "Facebook Post",
+                  "value": "Facebook Post"
+                },
+                {
+                  "name": "Instagram Post",
+                  "value": "Instagram Post"
+                },
+                {
+                  "name": "LinkedIn Post",
+                  "value": "LinkedIn Post"
+                },
+                {
+                  "name": "YouTube Post",
+                  "value": "YouTube Post"
+                }
+              ],
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Generate Posts",
+              "displayName": "Generate Posts",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": true,
+              "removed": true
+            },
+            {
+              "id": "Post Body",
+              "displayName": "Post Body",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Post Headline",
+              "displayName": "Post Headline",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "c85f24a6-71f1-4989-afb1-f1070c657dce",
+      "name": "Airtable",
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 2,
+      "position": [
+        1500,
+        400
+      ],
+      "credentials": {
+        "airtableTokenApi": {
+          "id": "9l4nF0WCmvSBZjJc",
+          "name": "Airtable Personal Access Token account - content ideas automatio"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "search",
+        "base": {
+          "__rl": true,
+          "value": "appXqGusAG2M1Otbf",
+          "mode": "list",
+          "cachedResultName": "Content Ideas",
+          "cachedResultUrl": "https://airtable.com/appXqGusAG2M1Otbf"
+        },
+        "table": {
+          "__rl": true,
+          "value": "tbl8W3DRr6kas0qEz",
+          "mode": "list",
+          "cachedResultName": "Post Type Prompt-Bits",
+          "cachedResultUrl": "https://airtable.com/appXqGusAG2M1Otbf/tbl8W3DRr6kas0qEz"
+        },
+        "filterByFormula": "={Name} = '{{ $json.body.postType[0].name }}'",
+        "returnAll": false,
+        "limit": 1,
+        "options": {}
+      },
+      "id": "09113fad-8bc6-48d3-aa17-f696794f5538",
+      "name": "Airtable1",
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 2,
+      "position": [
+        900,
+        400
+      ],
+      "credentials": {
+        "airtableTokenApi": {
+          "id": "9l4nF0WCmvSBZjJc",
+          "name": "Airtable Personal Access Token account - content ideas automatio"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "## To-Do:\n* set up a vector store to contain brand info that way content is 100% customized to brand"
+      },
+      "id": "d066979c-e462-4a47-a336-bc7ec8cae9c1",
+      "name": "Sticky Note",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        1360,
+        660
+      ]
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=# Transcript:\n {{ $('Webhook').item.json.body.transcript }}",
+        "options": {
+          "systemMessage": "=### Prompt:\n\nYou will receive a transcript or description of a content idea from a user for a  {{ $('Webhook').item.json.body.postType[0].name }}. This transcript may be informal or disorganized, but your task is to restructure it into a highly engaging and conversion-focused {{  $('Webhook').item.json.body.postType[0].name }}.\n\n#### Your task is to:\n- **Reformat and enhance** the input to make the content more engaging, clear, and persuasive, while maintaining the core message.\n- Ensure the post is optimized for **high engagement** (likes, comments, shares) and **conversions** (clicks, sign-ups, purchases, etc.).\n- **Elevate** the writing: improve sentence structure, flow, and tone to ensure the post feels professional yet conversational. Focus on creating a **compelling hook** that grabs attention immediately.\n- Include a strong **call-to-action (CTA)** relevant to the post’s goal (e.g., “Click the link below to learn more,” “Comment below,” “Sign up today,” etc.).\n- Make strategic use of **platform-specific engagement tactics**. Consider {{  $('Webhook').item.json.body.postType[0].name }} ideal post length and formatting for better visibility and engagement.\n\n#### Guidelines for  {{ $('Webhook').item.json.body.postType[0].name }}:\n{{ $json['Copy Best Practices'] }}\n\n---\n\n### Additional Instructions:\n- Don’t just follow the format of the input; **restructure and improve it** to make the post highly engaging and conversion-focused.\n- Align the content with The Platforms best practices for generating interaction and driving conversions, while keeping the user’s original message intact.\n- Remember, the tone should feel **personal, relatable, and persuasive**. "
+        }
+      },
+      "id": "8d117906-c612-4775-b4be-2d2c29e1647c",
+      "name": "AI Agent",
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.5,
+      "position": [
+        1120,
+        400
+      ]
+    }
+  ],
+  "pinData": {
+    "Webhook": [
+      {
+        "json": {
+          "headers": {
+            "host": "geopopos.app.n8n.cloud",
+            "user-agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/129.0.0.0 Safari/537.36",
+            "content-length": "302",
+            "accept": "*/*",
+            "accept-encoding": "gzip, br",
+            "accept-language": "en-US,en;q=0.9",
+            "cdn-loop": "cloudflare; loops=1; subreqs=1",
+            "cf-connecting-ip": "71.121.194.50",
+            "cf-ew-via": "15",
+            "cf-ipcountry": "US",
+            "cf-ray": "8cd0f638c1294267-EWR",
+            "cf-visitor": "{\"scheme\":\"https\"}",
+            "cf-worker": "n8n.cloud",
+            "content-type": "application/json",
+            "dnt": "1",
+            "origin": "https://block---xq-gus-a-g2-m1-otbf--9dk7vy8.alt.airtableblocks.com",
+            "priority": "u=1, i",
+            "sec-fetch-dest": "empty",
+            "sec-fetch-mode": "cors",
+            "sec-fetch-site": "cross-site",
+            "x-forwarded-for": "71.121.194.50, 162.158.159.119",
+            "x-forwarded-host": "geopopos.app.n8n.cloud",
+            "x-forwarded-port": "443",
+            "x-forwarded-proto": "https",
+            "x-forwarded-server": "traefik-5bdb8ff566-69kqm",
+            "x-is-trusted": "yes",
+            "x-real-ip": "71.121.194.50"
+          },
+          "params": {},
+          "query": {},
+          "body": {
+            "recordId": "recIrJsoIERnRu2D7",
+            "transcript": "So, what I see a lot of painting contractors do is sit on their phone and play solitaire. And the reason why that's bad is because they're not making money like ballers.",
+            "postType": [
+              {
+                "id": "seldYQswh1zA70ffM",
+                "name": "YouTube Shorts",
+                "color": "blueLight2"
+              }
+            ]
+          }
+        }
+      }
+    ]
+  },
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Airtable1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Airtable1": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Airtable",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "28a9c44a-55d7-40e3-8ea1-0de55b81dc4b",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "0f6245e0356426246a188cecc74cdc650d0205a70d673f5837c210ee9df7966a"
+  },
+  "id": "0rMjCe7Prc8Itoo8",
+  "tags": [
+    {
+      "createdAt": "2024-10-01T21:16:07.344Z",
+      "updatedAt": "2024-10-01T21:16:07.344Z",
+      "id": "RK6mnCHEJ90DzsaG",
+      "name": "Content Automation Pipel"
+    }
+  ]
+}

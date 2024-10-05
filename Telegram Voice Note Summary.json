@@ -1,0 +1,590 @@
+{
+  "name": "telegram voice note summary",
+  "nodes": [
+    {
+      "parameters": {
+        "updates": [
+          "*",
+          "message"
+        ],
+        "additionalFields": {
+          "download": true
+        }
+      },
+      "id": "9cda248c-4f21-4579-b6dd-90a7b60dc30b",
+      "name": "Telegram Trigger",
+      "type": "n8n-nodes-base.telegramTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        600,
+        420
+      ],
+      "webhookId": "7032223e-1624-43f6-828b-3cacfd25e2fa",
+      "credentials": {
+        "telegramApi": {
+          "id": "gbJxGU0Zxm9TToTD",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "url": "https://api.telegram.org/bot7337252539:AAFdHG7YJmTZt3o7cxyYCEXytGeF3r5kSJY/getFile",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "file_id",
+              "value": "={{ $json.message.voice.file_id }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "2eadef42-6ae3-4dee-aaac-9337e9b04877",
+      "name": "Get Audio File Path",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [
+        820,
+        420
+      ]
+    },
+    {
+      "parameters": {
+        "url": "=https://api.telegram.org/file/bot7337252539:AAFdHG7YJmTZt3o7cxyYCEXytGeF3r5kSJY/{{ $json.result.file_path }}",
+        "options": {}
+      },
+      "id": "5e5bb57b-23c0-4f9b-8abd-40d252424965",
+      "name": "Download Audio File",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [
+        1040,
+        420
+      ]
+    },
+    {
+      "parameters": {
+        "model": "gpt-4o",
+        "options": {
+          "presencePenalty": 0.8,
+          "temperature": 0.7,
+          "topP": 0.9
+        }
+      },
+      "id": "2b9d7516-9b7a-4b4b-8fc4-7c3fcb0fd527",
+      "name": "OpenAI Chat Model",
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1,
+      "position": [
+        1680,
+        640
+      ],
+      "credentials": {
+        "openAiApi": {
+          "id": "4YCNNpwqNB3KDji8",
+          "name": "Roofing Copilot N8N Project"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "5870765049",
+        "text": "=**Content Idea Added To Airtable**\n\n*Name:* \n{{ $('AI Agent').item.json.output.output.title }}\n_____________________\n\n*Outline:*\n {{ $json.output.outline }}\n\nAirtable Link:\n {{ $('Edit Fields').item.json.airtable_link }}",
+        "additionalFields": {
+          "reply_to_message_id": "={{ $('Telegram Trigger').item.json.message.message_id }}"
+        }
+      },
+      "id": "73719068-c9ed-4622-9fc6-4c4e1553aec1",
+      "name": "Telegram",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.1,
+      "position": [
+        2640,
+        420
+      ],
+      "credentials": {
+        "telegramApi": {
+          "id": "gbJxGU0Zxm9TToTD",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "audio",
+        "operation": "transcribe",
+        "options": {}
+      },
+      "id": "f4845045-7bd8-44c3-9798-655175fed065",
+      "name": "OpenAI",
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.1,
+      "position": [
+        1280,
+        420
+      ],
+      "credentials": {
+        "openAiApi": {
+          "id": "4YCNNpwqNB3KDji8",
+          "name": "Roofing Copilot N8N Project"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "id": "6692b1da-6ad1-4580-9faa-3f1601124fb7",
+      "name": "Auto-fixing Output Parser",
+      "type": "@n8n/n8n-nodes-langchain.outputParserAutofixing",
+      "typeVersion": 1,
+      "position": [
+        1880,
+        680
+      ]
+    },
+    {
+      "parameters": {
+        "model": "gpt-4o",
+        "options": {}
+      },
+      "id": "e91f0ea9-85d4-45db-9732-4cc342cd2679",
+      "name": "OpenAI Chat Model1",
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1,
+      "position": [
+        1880,
+        900
+      ],
+      "credentials": {
+        "openAiApi": {
+          "id": "4YCNNpwqNB3KDji8",
+          "name": "Roofing Copilot N8N Project"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsonSchema": "{\n  \"type\": \"object\",\n  \"properties\": {\n    \"title\": {\n      \"type\": \"string\"\n    },\n    \"outline\": {\n      \"type\": \"string\",\n      \"description\": \"Multiline string containing the outline, with each topic separated by a newline\"\n    }\n  },\n  \"required\": [\"title\", \"outline\"]\n}\n"
+      },
+      "id": "bffe2cf4-e2cc-4ae0-8e7f-1d506844cdc8",
+      "name": "Structured Output Parser",
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.1,
+      "position": [
+        2080,
+        900
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "create",
+        "base": {
+          "__rl": true,
+          "value": "appXqGusAG2M1Otbf",
+          "mode": "list",
+          "cachedResultName": "Content Ideas",
+          "cachedResultUrl": "https://airtable.com/appXqGusAG2M1Otbf"
+        },
+        "table": {
+          "__rl": true,
+          "value": "tblM5x3rh2Q4lW8G9",
+          "mode": "list",
+          "cachedResultName": "Table 1",
+          "cachedResultUrl": "https://airtable.com/appXqGusAG2M1Otbf/tblM5x3rh2Q4lW8G9"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Name": "={{ $json.output.output.title }}",
+            "Status": "Todo",
+            "Created At": "2024-10-01T16:54:47",
+            "Transcript": "={{ $('OpenAI').item.json.text }}",
+            "Outline": "={{ $json.output.output.outline }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Name",
+              "displayName": "Name",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Assignee",
+              "displayName": "Assignee",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Status",
+              "displayName": "Status",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "options",
+              "options": [
+                {
+                  "name": "Todo",
+                  "value": "Todo"
+                },
+                {
+                  "name": "In progress",
+                  "value": "In progress"
+                },
+                {
+                  "name": "Done",
+                  "value": "Done"
+                }
+              ],
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Created At",
+              "displayName": "Created At",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "dateTime",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Transcript",
+              "displayName": "Transcript",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Outline",
+              "displayName": "Outline",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Post Type",
+              "displayName": "Post Type",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "array",
+              "options": [
+                {
+                  "name": "YouTube Shorts",
+                  "value": "YouTube Shorts"
+                },
+                {
+                  "name": "Facebook Post",
+                  "value": "Facebook Post"
+                },
+                {
+                  "name": "Instagram Post",
+                  "value": "Instagram Post"
+                },
+                {
+                  "name": "LinkedIn Post",
+                  "value": "LinkedIn Post"
+                },
+                {
+                  "name": "YouTube Post",
+                  "value": "YouTube Post"
+                }
+              ],
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Generate Posts",
+              "displayName": "Generate Posts",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": true,
+              "removed": true
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "1782c8fd-6dc6-4f03-982b-8d48f4504ded",
+      "name": "Airtable",
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 2,
+      "position": [
+        2020,
+        420
+      ],
+      "credentials": {
+        "airtableTokenApi": {
+          "id": "9l4nF0WCmvSBZjJc",
+          "name": "Airtable Personal Access Token account - content ideas automatio"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "function escapeMarkdownV2(text) {\n  const specialChars = /[.*[\\]()~`>#\\+\\-=|{}]/g;\n  return text.replace(specialChars, '\\\\$&');\n}\n\n// Access the input data\nconst inputData = $('AI Agent').first().json.output.output;\n\nif (inputData && inputData.title && inputData.outline) {\n  // Escape Markdown for both title and outline\n  inputData.title = escapeMarkdownV2(inputData.title);\n  inputData.outline = escapeMarkdownV2(inputData.outline);\n\n  // Return the modified item\n  items[0].json.output = inputData;\n} else {\n  console.log('Invalid AI Agent output:', inputData);\n  throw new Error('Invalid AI Agent output');\n}\n\nreturn items;"
+      },
+      "id": "dc3bdb21-c90b-44d2-a45c-e67b9ec4476e",
+      "name": "Code",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2460,
+        460
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "2674eaf2-669c-4d4b-a224-e3dcef989a92",
+              "name": "airtable_link",
+              "value": "=https://airtable.com/appXqGusAG2M1Otbf/tblM5x3rh2Q4lW8G9/viwODJ1O01qEa8Uab/{{ $json.id }}?blocks=hide",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "e28d4663-cbf8-41b0-a909-82945baf7e9b",
+      "name": "Edit Fields",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.3,
+      "position": [
+        2280,
+        480
+      ]
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Here is the transcript:\n{{ $json.text }}",
+        "hasOutputParser": true,
+        "options": {
+          "systemMessage": "You will be given a transcript from a voice recording. Your task is to:\n\nGenerate a concise, engaging, and relevant title for the transcript.\nProduce a structured outline that summarizes the main topics and subtopics discussed.\nThe output should be formatted as valid JSON and include:\n\nA title that reflects the key theme of the transcript.\nAn outline as a single multiline string, where each main topic and a short description is separated by a newline character (\\n).\nMake sure the output is structured as valid JSON in the following format:\n\n\n  \"title\": \"Your title here\",\n  \"outline\": \"Main topic 1\\nMain topic 2\\nMain topic 3\"\n\nEnsure that the title is no more than 10 words, and the outline captures the core themes of the transcript in a clear, logical flow."
+        }
+      },
+      "id": "8eaffc73-12aa-4816-9bcf-44d0c85101d1",
+      "name": "AI Agent",
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.5,
+      "position": [
+        1680,
+        420
+      ]
+    }
+  ],
+  "pinData": {
+    "Telegram Trigger": [
+      {
+        "json": {
+          "update_id": 876017519,
+          "message": {
+            "message_id": 47,
+            "from": {
+              "id": 5870765049,
+              "is_bot": false,
+              "first_name": "Georgios",
+              "last_name": "Roros",
+              "language_code": "en"
+            },
+            "chat": {
+              "id": 5870765049,
+              "first_name": "Georgios",
+              "last_name": "Roros",
+              "type": "private"
+            },
+            "date": 1727829971,
+            "voice": {
+              "duration": 52,
+              "mime_type": "audio/ogg",
+              "file_id": "AwACAgEAAxkBAAMvZvyX0z2rw8pvoOxlUOU0D8lgEm4AAtkFAAIOvelHhj9RnEXMN4o2BA",
+              "file_unique_id": "AgAD2QUAAg696Uc",
+              "file_size": 204377
+            }
+          }
+        }
+      }
+    ]
+  },
+  "connections": {
+    "Telegram Trigger": {
+      "main": [
+        [
+          {
+            "node": "Get Audio File Path",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Audio File Path": {
+      "main": [
+        [
+          {
+            "node": "Download Audio File",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Download Audio File": {
+      "main": [
+        [
+          {
+            "node": "OpenAI",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Auto-fixing Output Parser": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model1": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Auto-fixing Output Parser",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Structured Output Parser": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "Auto-fixing Output Parser",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Airtable": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code": {
+      "main": [
+        [
+          {
+            "node": "Telegram",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "Code",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Airtable",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "88e6d2c2-fa59-4ddd-9f47-d3f8906833ef",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "0f6245e0356426246a188cecc74cdc650d0205a70d673f5837c210ee9df7966a"
+  },
+  "id": "6ZA8mBTpVB0p2jjF",
+  "tags": [
+    {
+      "createdAt": "2024-10-01T21:16:07.344Z",
+      "updatedAt": "2024-10-01T21:16:07.344Z",
+      "id": "RK6mnCHEJ90DzsaG",
+      "name": "Content Automation Pipel"
+    }
+  ]
+}

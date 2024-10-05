@@ -1,0 +1,487 @@
+{
+  "name": "Generate Images",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "fa3c683a-e2a9-4033-a224-0ddfe4d76a27",
+        "options": {}
+      },
+      "id": "24409840-80bd-48a3-b3b2-d9c2ae647ad5",
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1.1,
+      "position": [
+        680,
+        400
+      ],
+      "webhookId": "fa3c683a-e2a9-4033-a224-0ddfe4d76a27"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.ideogram.ai/generate",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Api-Key",
+              "value": "fzJI_BitQM_Yn6uLw9rCHd46Tciw73bBhOzNZw5KvM4T6pful0W0dN4c0yYF2DuhEyFw2pAVhUaI1C-ZPFwqtg"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\"image_request\":{\"prompt\": {{ JSON.stringify($json.output) }}, \"style_type\": \"AUTO\", \"aspect_ratio\":\"ASPECT_1_1\",\"model\":\"V_2\",\"magic_prompt_option\":\"AUTO\"}}",
+        "options": {}
+      },
+      "id": "e95eae14-34bd-48c0-84d1-5f8f7bf0349a",
+      "name": "HTTP Request",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [
+        1720,
+        400
+      ]
+    },
+    {
+      "parameters": {
+        "model": "gpt-4-turbo-preview",
+        "options": {}
+      },
+      "id": "79fe9721-81ca-4daa-88a3-d95996bdfa2f",
+      "name": "OpenAI Chat Model",
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1,
+      "position": [
+        1120,
+        620
+      ],
+      "credentials": {
+        "openAiApi": {
+          "id": "4YCNNpwqNB3KDji8",
+          "name": "Roofing Copilot N8N Project"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "base": {
+          "__rl": true,
+          "value": "appXqGusAG2M1Otbf",
+          "mode": "list",
+          "cachedResultName": "Content Ideas",
+          "cachedResultUrl": "https://airtable.com/appXqGusAG2M1Otbf"
+        },
+        "table": {
+          "__rl": true,
+          "value": "tblM5x3rh2Q4lW8G9",
+          "mode": "list",
+          "cachedResultName": "Content Ideas",
+          "cachedResultUrl": "https://airtable.com/appXqGusAG2M1Otbf/tblM5x3rh2Q4lW8G9"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "id": "={{ $('Webhook').item.json.body.recordId }}",
+            "Post Image URL": "={{ $json.data[0].url }}"
+          },
+          "matchingColumns": [
+            "id"
+          ],
+          "schema": [
+            {
+              "id": "id",
+              "displayName": "id",
+              "required": false,
+              "defaultMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": true,
+              "removed": false
+            },
+            {
+              "id": "Name",
+              "displayName": "Name",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Assignee",
+              "displayName": "Assignee",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Status",
+              "displayName": "Status",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "options",
+              "options": [
+                {
+                  "name": "Todo",
+                  "value": "Todo"
+                },
+                {
+                  "name": "In progress",
+                  "value": "In progress"
+                },
+                {
+                  "name": "Done",
+                  "value": "Done"
+                }
+              ],
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Created At",
+              "displayName": "Created At",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "dateTime",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Transcript",
+              "displayName": "Transcript",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Outline",
+              "displayName": "Outline",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Post Type",
+              "displayName": "Post Type",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "array",
+              "options": [
+                {
+                  "name": "YouTube Shorts",
+                  "value": "YouTube Shorts"
+                },
+                {
+                  "name": "Facebook Post",
+                  "value": "Facebook Post"
+                },
+                {
+                  "name": "Instagram Post",
+                  "value": "Instagram Post"
+                },
+                {
+                  "name": "LinkedIn Post",
+                  "value": "LinkedIn Post"
+                },
+                {
+                  "name": "YouTube Post",
+                  "value": "YouTube Post"
+                }
+              ],
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Generate Posts",
+              "displayName": "Generate Posts",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": true,
+              "removed": true
+            },
+            {
+              "id": "Post Body",
+              "displayName": "Post Body",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Post Headline",
+              "displayName": "Post Headline",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Generate Image",
+              "displayName": "Generate Image",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": true,
+              "removed": true
+            },
+            {
+              "id": "Post Image",
+              "displayName": "Post Image",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "array",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "Post Image URL",
+              "displayName": "Post Image URL",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "9a95367b-9492-417f-9fab-85d81c619935",
+      "name": "Airtable",
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 2,
+      "position": [
+        2060,
+        380
+      ],
+      "credentials": {
+        "airtableTokenApi": {
+          "id": "9l4nF0WCmvSBZjJc",
+          "name": "Airtable Personal Access Token account - content ideas automatio"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "search",
+        "base": {
+          "__rl": true,
+          "value": "appXqGusAG2M1Otbf",
+          "mode": "list",
+          "cachedResultName": "Content Ideas",
+          "cachedResultUrl": "https://airtable.com/appXqGusAG2M1Otbf"
+        },
+        "table": {
+          "__rl": true,
+          "value": "tbl8W3DRr6kas0qEz",
+          "mode": "list",
+          "cachedResultName": "Post Type Prompt-Bits",
+          "cachedResultUrl": "https://airtable.com/appXqGusAG2M1Otbf/tbl8W3DRr6kas0qEz"
+        },
+        "filterByFormula": "={Name} = '{{ $json.body.postType[0].name }}'",
+        "returnAll": false,
+        "limit": 1,
+        "options": {}
+      },
+      "id": "ef4224a1-e125-4db6-af82-70df0e75c3cb",
+      "name": "Airtable1",
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 2,
+      "position": [
+        900,
+        400
+      ],
+      "credentials": {
+        "airtableTokenApi": {
+          "id": "9l4nF0WCmvSBZjJc",
+          "name": "Airtable Personal Access Token account - content ideas automatio"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=# Social media Post:\n{{ $('Webhook').item.json.body.postBody }}\n\n# Additional Image Prompting:\n{{ $('Webhook').item.json.body.imagePrompt }}",
+        "options": {
+          "systemMessage": "=### Prompt:\n\nYou will receive a social media post that has been generated for platforms such as Facebook, Instagram, or LinkedIn. You may also receive additional image prompting from the user with their idea for the image. If the user provides additional image prompting you will want to use that heavily for inspiration. Your task is to create a detailed description of an image that would visually complement this post, which can then be used to generate an image via an image generation model.\n\n#### Your task is to:\n- Analyze the **content, tone, and message** of the social media post to understand its intent and key themes.\n- Based on the post, create a **vivid and detailed description** of an image that can accompany it. The image should enhance the post's engagement by visually representing its main ideas, tone, or call-to-action.\n- Ensure the image description includes details such as **subject matter, colors, style, setting, and emotions** that should be conveyed. If the post references a product, location, or specific situation, make sure those elements are described in the image.\n- The image should be tailored to the platform's best practices. For example:\n  - **Facebook/Instagram:** The image should be eye-catching, visually appealing, and aligned with the post's message. Describe visuals that will drive likes, shares, and comments.\n  - **LinkedIn:** The image should feel more professional or informational, complementing a more thoughtful or business-focused post.\n\n#### Image Description Requirements:\n1. **Subject:** What or who should be in the image? (e.g., a person, product, scene, landscape)\n2. **Setting:** Where is the image taking place? (e.g., indoors, outdoors, urban setting, home)\n3. **Action/Emotion:** What is happening in the image, and what emotions should be conveyed? (e.g., smiling faces, relaxing scenery, excitement)\n4. **Colors and Style:** What colors or visual style best represent the tone of the post? (e.g., bright and bold, muted and calm, vibrant and energetic)\n5. **Composition/Focus:** What should be the focal point of the image, and how should elements be arranged?\n\n---\n\n### Additional Instructions:\n- Ensure that the image description captures the essence of the social media post and enhances the message.\n- Provide enough detail for a generative image network to create an accurate and visually appealing image.\n- Keep the description concise but specific, focusing on visual elements that will make the image engaging and aligned with the platform's audience.\n\n___\n### Best Practices For Platform\n {{ $json['Creative Best Practices'] }}"
+        }
+      },
+      "id": "fdd34873-d2be-413f-a1f1-68bb8f4f02ed",
+      "name": "AI Agent",
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.5,
+      "position": [
+        1120,
+        400
+      ]
+    }
+  ],
+  "pinData": {
+    "Webhook": [
+      {
+        "json": {
+          "headers": {
+            "host": "geopopos.app.n8n.cloud",
+            "user-agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/129.0.0.0 Safari/537.36",
+            "content-length": "1318",
+            "accept": "*/*",
+            "accept-encoding": "gzip, br",
+            "accept-language": "en-US,en;q=0.9",
+            "cdn-loop": "cloudflare; loops=1; subreqs=1",
+            "cf-connecting-ip": "71.121.194.50",
+            "cf-ew-via": "15",
+            "cf-ipcountry": "US",
+            "cf-ray": "8cd1067dd7fe7274-EWR",
+            "cf-visitor": "{\"scheme\":\"https\"}",
+            "cf-worker": "n8n.cloud",
+            "content-type": "application/json",
+            "dnt": "1",
+            "origin": "https://block---xq-gus-a-g2-m1-otbf--3qw9k7d.alt.airtableblocks.com",
+            "priority": "u=1, i",
+            "sec-fetch-dest": "empty",
+            "sec-fetch-mode": "cors",
+            "sec-fetch-site": "cross-site",
+            "x-forwarded-for": "71.121.194.50, 172.70.114.146",
+            "x-forwarded-host": "geopopos.app.n8n.cloud",
+            "x-forwarded-port": "443",
+            "x-forwarded-proto": "https",
+            "x-forwarded-server": "traefik-5bdb8ff566-fsvrs",
+            "x-is-trusted": "yes",
+            "x-real-ip": "71.121.194.50"
+          },
+          "params": {},
+          "query": {},
+          "body": {
+            "recordId": "rec7qONXk759VU6p0",
+            "postBody": "Are you ready to take the leap into the roofing franchise world? 🚨 Before you jump, here are the TOP 10 THINGS you need to know to avoid common pitfalls and ensure your investment soars! 🔥\n\n1. **Understand the Market:** Do your homework! Know the demand in your area.\n2. **Franchise Fees:** Be clear on initial costs & ongoing fees.\n3. **Training & Support:** Ensure they offer comprehensive training.\n4. **Brand Reputation:** Align with a brand that shares your values.\n5. **Legal Matters:** Get familiar with the Franchise Disclosure Document (FDD).\n6. **Competition:** Know your competitors inside out.\n7. **Customer Service:** It's king; make sure you can deliver top-notch service.\n8. **Marketing Support:** Does the franchise provide marketing tools?\n9. **Financial Performance:** Examine earnings claims carefully.\n10. **Exit Strategy:** Always have an exit plan in place.\n\n👇 COMMENT BELOW with which tip was most eye-opening for you or if you have any questions about starting a roofing franchise!\n\n🔔 SHARE this post with someone who's thinking about investing in a franchise!\n\n#RoofingFranchise #InvestmentTips #BusinessOpportunity",
+            "imagePrompt": null,
+            "postType": [
+              {
+                "id": "selX5itmqTcSZSI7S",
+                "name": "Facebook Post",
+                "color": "cyanLight2"
+              }
+            ]
+          }
+        }
+      }
+    ]
+  },
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Airtable1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request": {
+      "main": [
+        [
+          {
+            "node": "Airtable",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Airtable1": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "f730c66b-3d7c-4efc-b8a2-c22adef4fb0c",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "0f6245e0356426246a188cecc74cdc650d0205a70d673f5837c210ee9df7966a"
+  },
+  "id": "hamUziSIulGRrIgJ",
+  "tags": [
+    {
+      "createdAt": "2024-10-01T21:16:07.344Z",
+      "updatedAt": "2024-10-01T21:16:07.344Z",
+      "id": "RK6mnCHEJ90DzsaG",
+      "name": "Content Automation Pipel"
+    }
+  ]
+}
